@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Словоучитель / Список слов</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 5px;
+        }
+        th {
+          text-align: right;
+        }
+        td {
+          text-align: right;
+        }
+	</style>
+</head>
+<body>
+	<table style="width:50%">
+		<tr>
+			<th>Русское</th>
+			<th>Латышское</th>
+		</tr>
+        <tr th:each="word: ${wordList}">
+            <td th:text="${word.russian}" />
+            <td th:text="${word.latvian}" />
+        </tr>
+    </table>
+    <h1><a href="/">Back</a></h1>
+</body>
+</html>

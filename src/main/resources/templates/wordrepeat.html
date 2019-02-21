@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.hiddentxt {
+  display: none;
+}
+
+.show {
+  display:block;
+}
+
+</style>
+<head>
+	<title>Словоучитель / Повторение слов</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1 th:if="${word} != null" th:text="${word.russian}"></h1>
+	
+	<div class="dropdown">
+	  <button id="showBtn" class="showbtn">Показать перевод</button>
+	  <h1 id="answ" class="hiddentxt" th:if="${word} != null" th:text="${word.latvian}"></h1>
+	  <form method="post">
+	  	<button id="nextBtn" class="hiddentxt" type="submit">Следующее слово</button>
+	  </form>
+	</div>
+
+	<h1><a href="/">На главную</a></h1>
+	
+	<script>
+	document.getElementById("showBtn").onclick = function() {myFunction()};
+	
+	function myFunction() {
+	
+	  var elem = document.getElementById("showBtn");
+	  if (elem.innerHTML == "Показать перевод") elem.innerHTML = "Скрыть";
+	  else elem.innerHTML = "Показать перевод";
+	  
+	  document.getElementById("answ").classList.toggle("show");
+	  document.getElementById("nextBtn").classList.toggle("show");
+	}
+	</script>
+	
+</body>
+</html>

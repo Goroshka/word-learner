@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Словоучитель / Список слов</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<style>
+    <title>Словоучитель / Список слов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
         table, th, td {
           border: 1px solid black;
           border-collapse: collapse;
@@ -17,19 +17,19 @@
         td {
           text-align: right;
         }
-	</style>
+    </style>
 </head>
 <body>
-	<table style="width:50%">
-		<tr>
-			<th>Русское</th>
-			<th>Латышское</th>
-		</tr>
-        <tr th:each="word: ${wordList}">
-            <td th:text="${word.russian}" />
-            <td th:text="${word.latvian}" />
-        </tr>
-    </table>
-    <h1><a href="/">Back</a></h1>
+<table style="width:50%">
+    <tr>
+        <th>Русское</th>
+        <th>Латышское</th>
+    </tr>
+    <tr th:each="word: ${wordList}">
+        <td th:text="${word.russian}" />
+        <td th:text="${word.latvian}" />
+    </tr>
+</table>
+<h1><a href="/">На главную</a></h1>
 </body>
 </html>

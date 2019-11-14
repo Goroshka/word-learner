@@ -1,10 +1,6 @@
 package com.koldakov.service;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,8 +19,9 @@ import com.koldakov.repository.WordRepository;
 public class WordService {
     private static final Logger log = LoggerFactory.getLogger(WordService.class);
 
-    private static final String DB_FILE_PATH = "/home/anton/Documents/DB/WordDB/WordDB.txt";
-    
+    private static final String DB_FILE_DIR = System.getProperty("user.home") + "/.word_learner_application/DB/WordDB";
+    private static final String DB_FILE_NAME = DB_FILE_DIR + "/WordDB.txt";
+
     private List<Word> repeatList;
 
     @Autowired
@@ -46,7 +43,7 @@ public class WordService {
     private void loadDb() {
         log.info("-> loading word database");
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(DB_FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(DB_FILE_NAME))) {
             String wordLine;
             while ((wordLine = reader.readLine()) != null) {
                 String[] wordParts = wordLine.split(";");
@@ -61,11 +58,15 @@ public class WordService {
     private void persistDb() {
         log.info("-> persisting word database");
 
-        List<Word> list = wordRepository.findAll();
-        try (PrintWriter writer = new PrintWriter(new FileOutputStream(DB_FILE_PATH))) {
-            list.forEach(w -> writer.println(wordToDbString(w)));
-        } catch (IOException e) {
-            log.error("Cannot persist database because {}", e.getMessage());
+        if (new File(DB_FILE_DIR).mkdirs()) {
+            List<Word> list = wordRepository.findAll();
+            try (PrintWriter writer = new PrintWriter(new FileOutputStream(DB_FILE_NAME))) {
+                list.forEach(w -> writer.println(wordToDbString(w)));
+            } catch (IOException e) {
+                log.error("Cannot persist database because {}", e.getMessage());
+            }
+        } else {
+            log.error("Word database was not persisted due to error when creating directories {} ", DB_FILE_DIR);
         }
     }
 
@@ -73,18 +74,18 @@ public class WordService {
         return word.getRussian() + ";" + word.getLatvian();
     }
 
-	public Word getRandomWord() {
-		Word word = null;
-		
-		if (repeatList == null || repeatList.size() == 0) {
-			repeatList = wordRepository.findAll();
-			Collections.shuffle(repeatList);
-		}
-		if (repeatList.size() > 0) {
-			word = repeatList.get(0);
-			repeatList.remove(0);
-		}
-		
-		return word;
-	}
+    public Word getRandomWord() {
+        Word word = null;
+
+        if (repeatList == null || repeatList.size() == 0) {
+            repeatList = wordRepository.findAll();
+            Collections.shuffle(repeatList);
+        }
+        if (repeatList.size() > 0) {
+            word = repeatList.get(0);
+            repeatList.remove(0);
+        }
+
+        return word;
+    }
 }

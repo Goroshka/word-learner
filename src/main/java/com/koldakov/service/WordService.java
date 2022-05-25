@@ -19,7 +19,7 @@ import com.koldakov.repository.WordRepository;
 public class WordService {
     private static final Logger log = LoggerFactory.getLogger(WordService.class);
 
-    private static final String DB_FILE_DIR = System.getProperty("user.home") + "/.word_learner_application/DB/WordDB";
+    private static final String DB_FILE_DIR = "/tmp/.word_learner_application/DB/WordDB";
     private static final String DB_FILE_NAME = DB_FILE_DIR + "/WordDB.txt";
 
     private List<Word> repeatList;
@@ -58,7 +58,8 @@ public class WordService {
     private void persistDb() {
         log.info("-> persisting word database");
 
-        if (new File(DB_FILE_DIR).mkdirs()) {
+        File dbFileDir = new File(DB_FILE_DIR);
+        if (dbFileDir.exists() || dbFileDir.mkdirs()) {
             List<Word> list = wordRepository.findAll();
             try (PrintWriter writer = new PrintWriter(new FileOutputStream(DB_FILE_NAME))) {
                 list.forEach(w -> writer.println(wordToDbString(w)));
